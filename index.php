@@ -23,10 +23,12 @@ if (isset($getd)) {
 <head>
         <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
         <title>GRStalker</title>
-<link href="/steinsplitter/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="//tools-static.wmflabs.org/cdnjs/ajax/libs/twitter-bootstrap/2.3.2/css/bootstrap.min.css">
+        <script src="//tools-static.wmflabs.org/tooltranslate/tt.js"></script>
+        <script src="//tools-static.wmflabs.org/cdnjs/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <style>
       body {
-        padding-top: 60px;
+        padding-top: 65px;
       }
     </style>
 </head>
@@ -36,32 +38,39 @@ if (isset($getd)) {
       <div class="navbar-inner">
         <div class="container">
 
-          <a class="brand" href="#">GRStalker</a>
+          <a class="brand" href="index.php"><span tt="grstalker">GRStalker</span></a>
           <div class="nav-collapse collapse">
-                <ul id="toolbar-right" class="nav pull-right">
-            </ul>
+            <div class="navbar-form pull-right">
+             <span id = "fasti18n"> <span id='tooltranslate_wrapper'></span></span>
+            </div>
           </div><!--/.nav-collapse -->
         </div>
       </div>
     </div>
         <div class="container">
-        <p>Userrightchanges via meta on local wikis.</p>
+<?php
+require_once ( "/data/project/tooltranslate/public_html/tt.php") ;
+$tt = new ToolTranslation ( array ( 'tool' => 'grstalker' , 'language' => 'en' , 'fallback' => 'en' , 'highlight_missing' => false ) ) ;
+print $tt->getJS('#tooltranslate_wrapper') ;
+print $tt->getJS() ;
+?>
+        <p><span tt="desc">Userrightchanges via meta on local wikis.</span></p>
         <form class="form-search">
                 <input type="text" value="" name="wm" id="es" class="input-medium search-query" placeholder="user@wiki" />
-                <button type="submit" class="btn">Search</button>
+                <button type="submit" class="btn"><span tt="search">Search</span></button>
         </form>
 <?php if (isset($getd)): ?>
-        <p><b>Results for:</b> <?= htmlspecialchars($getd) ?></p>
+        <p><b><span tt="results">Results for:</span></b> <?= htmlspecialchars($getd) ?></p>
         <br/>
         <table class="table table-bordered">
                 <thead>
                         <tr>
-                                <th>Timestamp</th>
-                                <th>User</th>
-                                <th>Actor</th>
-                                <th>Previous rights</th>
-                                <th>Subsequent rights</th>
-                                <th>Reason</th>
+                                <th><span tt="ts">Timestamp</span></th>
+                                <th><span tt="user">User</span></th>
+                                <th><span tt="actor">Actor</span></th>
+                                <th><span tt="prevr">Previous rights</span></th>
+                                <th><span tt="subs">Subsequent rights</span></th>
+                                <th><span tt="reason">Reason</span></th>
                         </tr>
                 </thead>
                 <tbody>
@@ -95,11 +104,11 @@ if (isset($getd)) {
         ?>
 <?php else: ?>
         <div class="alert alert-info">
-                <strong>How to use this tool?</strong> You can search rightchanges by wiki (Example:  <strong>dewiki</strong>), by username (Example: <strong>Steinsplitter@test2wiki</strong>) or by a specific username on all wikis (Example: <strong>Base@%</strong>).
+                <div tt="howto"><strong>How to use this tool?</strong> You can search rightchanges by wiki (Example:  <strong>dewiki</strong>), by username (Example: <strong>Steinsplitter@test2wiki</strong>) or by a specific username on all wikis (Example: <strong>Base@%</strong>).</span>
         </div>
 <?php endif; ?>
 </div>
 </div>
-<center>Powered by <a href="https://www.mediawiki.org/wiki/Wikimedia_Labs" title="Wikimedia Labs"><em>WMF Labs</em></a> | Max. 1000 results</center>
+<center><small><span tt="maxresults">Max. 1000 results</span></small></center>
 </body>
 </html>
