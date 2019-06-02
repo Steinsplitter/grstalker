@@ -14,7 +14,7 @@ if (isset($getd)) {
                 'metawiki_p');
         if ($db->connect_errno)
                 die("Failed to connect to MySQL: (" . $db->connect_errno . ") " . $db->connect_error);
-        $r = $db->query('SELECT log_title, user_name, log_timestamp, log_params, comment_text, DATE_FORMAT(log_timestamp, "%b %d %Y %h:%i %p") AS lts FROM logging JOIN comment ON comment_id = log_id JOIN user ON log_user = user_id WHERE log_namespace = 2 AND log_title LIKE "%' . str_replace(" ", "_", $db->real_escape_string($getd)) . '" AND log_title LIKE "%@%" AND  log_type = "rights" ORDER BY log_timestamp DESC LIMIT 1000;');
+        $r = $db->query('SELECT log_title, user_name, log_timestamp, log_params, comment_text, DATE_FORMAT(log_timestamp, "%b %d %Y %h:%i %p") AS lts FROM logging JOIN comment ON comment_id = log_comment_id JOIN user ON log_user = user_id WHERE log_namespace = 2 AND log_title LIKE "%' . str_replace(" ", "_", $db->real_escape_string($getd)) . '" AND log_title LIKE "%@%" AND  log_type = "rights" ORDER BY log_timestamp DESC LIMIT 1000;');
         unset($tools_mycnf, $tools_pw);
 }
 ?>
@@ -31,6 +31,11 @@ if (isset($getd)) {
         padding-top: 65px;
       }
     </style>
+    <script>
+        $(document).on("click", "#sendreq1", function() {
+        $('#spinner').show();
+        });
+    </script>
 </head>
 <body>
 
@@ -57,7 +62,8 @@ print $tt->getJS() ;
         <p><span tt="desc">Userrightchanges via meta on local wikis.</span></p>
         <form class="form-search">
                 <input type="text" value="" name="wm" id="es" class="input-medium search-query" placeholder="user@wiki" />
-                <button type="submit" class="btn"><span tt="search">Search</span></button>
+                <button type="submit" id="sendreq1" class="btn sendreq1"><span tt="search">Search</span></button>
+        <span id="spinner" style="display:none;"><img src="https://upload.wikimedia.org/wikipedia/commons/7/78/24px-spinner-0645ad.gif"/ ></span>
         </form>
 <?php if (isset($getd)): ?>
         <p><b><span tt="results">Results for:</span></b> <?= htmlspecialchars($getd) ?></p>
