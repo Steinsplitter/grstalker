@@ -7,6 +7,7 @@
  */
 
 $getd = $_GET['wm'];
+
 if (isset($getd)) {
         $tools_pw = posix_getpwuid(posix_getuid());
         $tools_mycnf = parse_ini_file($tools_pw['dir'] . "/replica.my.cnf");
@@ -14,7 +15,24 @@ if (isset($getd)) {
                 'metawiki_p');
         if ($db->connect_errno)
                 die("Failed to connect to MySQL: (" . $db->connect_errno . ") " . $db->connect_error);
-        $r = $db->query('SELECT log_title, user_name, log_timestamp, log_params, comment_text, DATE_FORMAT(log_timestamp, "%b %d %Y %h:%i %p") AS lts FROM logging JOIN comment ON comment_id = log_comment_id JOIN user ON log_user = user_id WHERE log_namespace = 2 AND log_title LIKE "%' . str_replace(" ", "_", $db->real_escape_string($getd)) . '" AND log_title LIKE "%@%" AND  log_type = "rights" ORDER BY log_timestamp DESC LIMIT 1000;');
+        $r = $db->query( 'SELECT
+ log_title,
+ actor_name,
+ log_timestamp,
+ log_params,
+ comment_text,
+ DATE_FORMAT(log_timestamp, "%b %d %Y %h:%i %p") AS lts
+FROM logging
+JOIN comment
+ ON comment_id = log_comment_id
+INNER JOIN actor
+ ON log_actor = actor_id
+WHERE log_namespace = 2
+AND log_title LIKE "%' . str_replace(" ", "_", $db->real_escape_string($getd)) . '"
+AND log_title LIKE "%@%"
+AND  log_type = "rights"
+ORDER BY log_timestamp DESC
+LIMIT 1000;');
         unset($tools_mycnf, $tools_pw);
 }
 ?>
